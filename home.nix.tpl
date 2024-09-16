@@ -26,8 +26,7 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
-    devbox
-    fzf
+    # Applications
     (vscode-with-extensions.override {
       vscodeExtensions = with vscode-extensions; [
         bbenoist.nix
@@ -39,8 +38,11 @@
     jetbrains.datagrip
     postman
     lens
+    # Development Tools
+    mise
     kubectl
     slack
+    fzf
     (google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])
     krew
     direnv

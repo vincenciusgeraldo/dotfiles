@@ -4,11 +4,21 @@ set -e
 
 # Define color codes
 GREEN='\033[0;32m'
+RED='\033[31m'
 RESET='\033[0m'
 
 command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
+
+# Function to handle errors
+error_handler() {
+  echo -e "${RED}An error occurred at line $1.${RESET}"
+  exit 1
+}
+
+# Set trap to catch errors
+trap 'error_handler $LINENO' ERR
 
 # Check if `nix` command exists
 if command_exists nix && nix --version >/dev/null 2>&1; then
@@ -32,9 +42,10 @@ fi
 
 # Setup Nix and Home Manager configs
 # By default this setup will use user <user>. 
-echo -e "${GREEN}Build Nix config friom template"
-cp flake.nix.tpl flake.nix
-cp home.nix.tpl home.nix
-echo -e "${GREEN}Set current user for Nix and Home Manager config as $(whoami)"
-sed -i "s/<user>/$(whoami)/g" flake.nix
-sed -i "s/<user>/$(whoami)/g" home.nix
+echo -e "${GREEN}Build Nix config friom template${RESET}"
+cp flake.nix.tpl ~/.nix-configs/flake.nix
+cp home.nix.tpl ~/.nix-configs/home.nix
+mkdir -p ~/.nix-configs
+sed -i "s/<user>/$(whoami)/g" ~/.nix-configs/flake.nix
+sed -i "s/<user>/$(whoami)/g" ~/.nix-configs/home.nix
+echo -e "${GREEN}Nix configurations is created at '~/.nix-configs' for user $(whoami)${RESET}"

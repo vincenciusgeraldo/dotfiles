@@ -72,7 +72,7 @@
 
     shellAliases = {
       ll = "ls -l";
-      rebuild = "home-manager switch --flake ~/dotenv";
+      rebuild = "home-manager switch --flake ~/.nix-configs";
     };
   
     history = {

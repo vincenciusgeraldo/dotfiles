@@ -1,0 +1,40 @@
+#!/bin/sh
+
+set -e
+
+# Define color codes
+GREEN='\033[0;32m'
+RESET='\033[0m'
+
+command_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+# Check if `nix` command exists
+if command_exists nix && nix --version >/dev/null 2>&1; then
+   echo -e "${GREEN}$(nix --version) is already installed on the system${RESET}"
+else
+   echo -e "${GREEN}Nix is not installed on the system. Installing Nix..${RESET}"
+   sh <(curl -L https://nixos.org/nix/install) --no-daemon
+   echo -e "${GREEN}$(nix --version) is installed on the system${RESET}"
+fi
+
+# Check if home-manager exist
+if command_exists home-manager && home-manager --version >/dev/null 2>&1; then
+   echo -e "${GREEN}Home Manager $(home-manager --version) is already installed on the system${RESET}"
+else
+   echo -e "${GREEN}Home Manager is not installed on the system. Installing Home Manager..${RESET}"
+   nix-channel --add https://github.com/nix-community/home-manager/archive/release-24.05.tar.gz home-manager
+   nix-channel --update
+   nix-shell '<home-manager>' -A install
+   echo -e "${GREEN}Home Manager $(home-manager --version) is installed on the system${RESET}"
+fi
+
+# Setup Nix and Home Manager configs
+# By default this setup will use user <user>. 
+echo -e "${GREEN}Build Nix config friom template"
+cp flake.nix.tpl flake.nix
+cp home.nix.tpl home.nix
+echo -e "${GREEN}Set current user for Nix and Home Manager config as $(whoami)"
+sed -i "s/<user>/$(whoami)/g" flake.nix
+sed -i "s/<user>/$(whoami)/g" home.nix

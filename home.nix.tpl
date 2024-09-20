@@ -50,13 +50,7 @@
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
-  home.file = {
-    ".zshrc".text = ''
-      export PATH="$HOME/.krew/bin:$PATH"
-      export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
-      eval "$(direnv hook zsh)"
-    '';
-  };
+  home.file = {};
 
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. These will be explicitly sourced when using a
@@ -86,8 +80,23 @@
     };
 
     initExtra = ''
+      export PATH="$HOME/.krew/bin:$PATH"
+      export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+      eval "$(direnv hook zsh)"
       eval "$(mise activate zsh)"
-                              '';
+
+      set_git_author() {
+        local email="$2" name="$1"
+
+        if [[ -z "$email" ]] || [[ -z "$name" ]]; then
+          >&2 echo "Couldn't set git author!"
+          return 1
+        fi
+
+        git config user.name "$name"
+        git config user.email "$email"        
+      }
+      '';
 
     zplug = {
       enable = true;

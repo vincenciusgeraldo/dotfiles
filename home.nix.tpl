@@ -38,12 +38,12 @@
     jetbrains.datagrip
     postman
     lens
+    dbeaver-bin
     # Development Tools
     mise
     kubectl
     slack
     fzf
-    (google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])
     krew
     direnv
   ];
@@ -75,12 +75,19 @@
     shellAliases = {
       ll = "ls -l";
       rebuild = "home-manager switch --flake ~/.nix-configs";
+      k = "kubectl";
+      kpods = "kubectl get pods";
+      kexec = "kubectl exec -ti";
     };
   
     history = {
       size = 10000;
       path = "${config.xdg.dataHome}/.zsh_history";
     };
+
+    initExtra = ''
+      eval "$(mise activate zsh)"
+                              '';
 
     zplug = {
       enable = true;

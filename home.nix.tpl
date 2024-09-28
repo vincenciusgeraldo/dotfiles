@@ -27,18 +27,17 @@
   # environment.
   home.packages = with pkgs; [
     # Applications
-    (vscode-with-extensions.override {
-      vscodeExtensions = with vscode-extensions; [
-        bbenoist.nix
-      ];
-    })
+    vscode
+    jetbrains.idea-community
     jetbrains.webstorm
     jetbrains.phpstorm
     jetbrains.goland
+    jetbrains.ruby-mine
     jetbrains.datagrip
     postman
     lens
     dbeaver-bin
+    
     # Development Tools
     mise
     kubectl
@@ -46,6 +45,7 @@
     fzf
     krew
     direnv
+    devbox
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -121,7 +121,7 @@
        set-local-user = "!f() { git config user.name \"$1\"; git config user.email \"$2\"; }; f";
     };
 
-    # Extran config
+    # Extra config
     extraConfig = {
       core = { editor = "nano"; };
     };
